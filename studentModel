@@ -1,0 +1,7 @@
+public class StudentGraph
+    {
+        public string FirstName { get; set; }
+
+        public int Pass { get; set; }
+        public int Fail { get; set; }
+    }
