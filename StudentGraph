@@ -1,0 +1,25 @@
+[Route("api/students")]
+    [ApiController]
+    public class StudentRestController : ControllerBase
+    {
+        #region Private Variables
+        private readonly ValuesRepository _repository;
+        #endregion
+
+        #region Controller To Repository
+        public StudentRestController(ValuesRepository repository)
+        {
+            this._repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+        #endregion
+
+        #region Student Graph
+        [Produces("application/json")]
+        [HttpGet("grade")]
+        public async Task<ActionResult<IEnumerable<StudentGraph>>> Get()
+        {
+            return await _repository.GetStudentGrade();
+        }
+        #endregion
+
+    }
