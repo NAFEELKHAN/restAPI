@@ -1,0 +1,48 @@
+  public class ValuesRepository
+    {
+        #region Private Variales
+        private readonly string _cs;
+
+        public ValuesRepository(IConfiguration configuration)
+        {
+            _cs = configuration.GetConnectionString("DefaultConnection");
+        }
+        #endregion
+
+
+        #region Student Graph
+        public async Task<List<StudentGraph>> GetStudentGrade()
+        {
+            using SqlConnection sql = new SqlConnection(_cs);
+            using SqlCommand cmd = new SqlCommand("GetStudentGrades", sql)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
+            var response = new List<StudentGraph>();
+            await sql.OpenAsync();
+
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    response.Add(MapToStudentGrade(reader));
+                }
+            }
+
+            return response;
+        }
+
+        private StudentGraph MapToStudentGrade(SqlDataReader reader)
+        {
+            return new StudentGraph()
+            {
+
+                FirstName = reader["Firstname"].ToString(),
+                Fail = (int)reader["Fail"],
+                Pass = (int)reader["Pass"]
+            };
+        }
+
+        #endregion
+
+    }
